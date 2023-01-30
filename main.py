@@ -734,12 +734,16 @@ def search_profile_menu():
                 return
 
 
-def delete_profile(input_list):
+def delete_profile(input_list, input_list2):
     user_del = input("Enter profile number: ")
     for i in input_list:
         if user_del == i.profile_num:
             input_list.remove(i)
             print(f"Profile {user_del} has been deleted.")
+    for j in input_list:
+        if user_del == j.profile_num:
+            input_list.remove(j)
+            print(f"All accounts associated with Profile {user_del} have been deleted.")
 
 
 def display_profiles(input_list):
@@ -799,7 +803,7 @@ def main_menu():
                 search_profile_menu()
             elif user == 4:
                 print("Delete Profile")
-                delete_profile(profile_list)
+                delete_profile(profile_list, accounts_list)
             elif user == 5:
                 print("Save Data")
                 save_data(profile_list, accounts_list)
