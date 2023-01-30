@@ -529,6 +529,62 @@ def account_menu(profile, account):
                 profile_menu(profile)
 
 
+def edit_profile(input_profile):
+    while True:
+        print(f"""
+        Banking System Prototype
+        ====================
+        Profile # {input_profile.profile_num}
+        --------------------
+        [1] Edit First Name
+        [2] Edit Middle Name
+        [3] Edit Last Name
+        [4] Edit Date of Birth
+        [5] Edit Address
+        [6] Edit Phone Number
+        [7] Edit Email Address
+        [0] Return to Profile
+        """)
+        user = input("Please select an option from above: ")
+        try:
+            user = int(user)
+            if user not in range(0, 8):
+                raise ValueError
+        except ValueError:
+            print("Invalid input")
+        else:
+            if user == 1:
+                new_first_name = create_first_name()
+                input_profile.first_name = new_first_name
+                profile_menu(input_profile)
+            elif user == 2:
+                new_middle_name = create_middle_name()
+                input_profile.middle_name = new_middle_name
+                profile_menu(input_profile)
+            elif user == 3:
+                new_last_name = create_last_name()
+                input_profile.last_name = new_last_name
+                profile_menu(input_profile)
+            elif user == 4:
+                new_date_of_birth = create_date_of_birth()
+                input_profile.date_of_birth = new_date_of_birth
+                profile_menu(input_profile)
+            elif user == 5:
+                new_address = create_address()
+                input_profile.address = new_address
+                profile_menu(input_profile)
+            elif user == 6:
+                new_phone_number = create_phone_number()
+                input_profile.phone_num = new_phone_number
+                profile_menu(input_profile)
+            elif user == 7:
+                new_email = create_email_address()
+                input_profile.email_address = new_email
+                profile_menu(input_profile)
+            elif user == 0:
+                profile_menu(input_profile)
+
+
 def profile_menu(input_profile):
     while True:
         print(f"""
@@ -576,6 +632,8 @@ def profile_menu(input_profile):
                                 account_menu(input_profile, i)
             if user == 3:
                 close_account(input_profile)
+            if user == 4:
+                edit_profile(input_profile)
             if user == 0:
                 main_menu()
 
