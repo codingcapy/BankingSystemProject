@@ -132,9 +132,9 @@ def load_accounts_data():
                     new_account = Account(profile_num1, account_num, account_type)
                     new_account.balance += float(data1[3])
                     accounts_list.append(new_account)
-        except JSONDecodeError:
+        except:
             accounts_list = []
-    except JSONDecodeError:
+    except Exception:
         print("An unexpected error has occurred, please contact program developer. Ending program.")
         exit()
 
@@ -740,7 +740,7 @@ def delete_profile(input_list, input_list2):
         if user_del == i.profile_num:
             input_list.remove(i)
             print(f"Profile {user_del} has been deleted.")
-    for j in input_list:
+    for j in input_list2:
         if user_del == j.profile_num:
             input_list.remove(j)
             print(f"All accounts associated with Profile {user_del} have been deleted.")
