@@ -108,7 +108,7 @@ def load_profile_data():
 def load_accounts_data():
     global accounts_list
     try:
-        with open("accounts_data.txt", "x+") as accounts_data:
+        with open("accounts_data_test.txt", "x+") as accounts_data:
             file_content = accounts_data.read()
             lines = file_content.splitlines()
             for line in lines:
@@ -122,7 +122,7 @@ def load_accounts_data():
                 accounts_list.append(new_account)
     except FileExistsError:
         try:
-            with open("accounts_data.txt", "r+") as accounts_data:
+            with open("accounts_data_test.txt", "r+") as accounts_data:
                 file_content = accounts_data.read()
                 lines = file_content.splitlines()
                 for line in lines:
@@ -457,30 +457,6 @@ def display_accounts(input_list, input_profile):
             i.display_details()
 
 
-def deposit(input_account):
-    deposit = input("Enter deposit amount: ")
-    try:
-        deposit = float(deposit)
-        if deposit < 0.01:
-            raise ValueError
-    except ValueError:
-        print("Invalid amount")
-    else:
-        input_account.balance += deposit
-
-
-def withdraw(input_account):
-    withdrawal = input("Enter withdrawal amount: ")
-    try:
-        withdrawal = float(withdrawal)
-        if withdrawal > input_account.balance:
-            raise ValueError
-    except ValueError:
-        print("Invalid amount")
-    else:
-        input_account.balance -= withdrawal
-
-
 def account_menu(profile, account):
     while True:
         print(f"""
@@ -505,11 +481,27 @@ def account_menu(profile, account):
             print("Invalid input, please select a valid option")
         else:
             if user == 1:
-                deposit(account)
-                account_menu(profile, account)
+                deposit = input("Enter deposit amount: ")
+                try:
+                    deposit = float(deposit)
+                    if deposit < 0.01:
+                        raise ValueError
+                except ValueError:
+                    print("Invalid amount")
+                else:
+                    account.balance += deposit
+                    account_menu(profile, account)
             if user == 2:
-                withdraw(account)
-                account_menu(profile, account)
+                withdrawal = input("Enter withdrawal amount: ")
+                try:
+                    withdrawal = float(withdrawal)
+                    if withdrawal > account.balance:
+                        raise ValueError
+                except ValueError:
+                    print("Invalid amount")
+                else:
+                    account.balance -= withdrawal
+                    account_menu(profile, account)
             if user == 3:
                 while True:
                     funds = input("Enter amount to transfer: ")
@@ -700,7 +692,7 @@ def save_data(input_list1, input_list2):
         for i in input_list1:
             profile_data.write(
                 f"{i.profile_num},{i.first_name},{i.middle_name},{i.last_name},{i.date_of_birth},{i.address},{i.phone_num},{i.email_address}\n")
-    with open("accounts_data.txt", "w") as accounts_data:
+    with open("accounts_data_test.txt", "w") as accounts_data:
         for j in input_list2:
             accounts_data.write(f"{j.profile_num},{j.account_num},{j.account_type},{j.balance},{j.timestamp}\n")
 
