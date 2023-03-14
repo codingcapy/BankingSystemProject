@@ -510,9 +510,8 @@ def account_menu(profile, account):
                             if account1 == i.account_num:
                                 i.balance += funds
                         account_menu(profile, account)
-
             if user == 0:
-                profile_menu(profile)
+                return
 
 
 def edit_profile(input_profile):
@@ -568,7 +567,7 @@ def edit_profile(input_profile):
                 input_profile.email_address = new_email
                 profile_menu(input_profile)
             elif user == 0:
-                profile_menu(input_profile)
+                return
 
 
 def profile_menu(input_profile):
@@ -590,7 +589,7 @@ def profile_menu(input_profile):
         [2] Choose existing account
         [3] Close account
         [4] Edit profile
-        [0] Return to Main Menu
+        [0] Return to Search Menu
         """)
         user = input("Please select an option from above: ")
         try:
@@ -603,25 +602,16 @@ def profile_menu(input_profile):
             if user == 1:
                 create_account(input_profile)
             if user == 2:
-                while True:
-                    account = input("Enter account number: ")
-                    if account == 'cancel':
-                        return
-                    try:
-                        if not re.search("^[\d]{12}$", account):
-                            raise ValueError
-                    except ValueError:
-                        print("Invalid account number")
-                    else:
-                        for i in accounts_list:
-                            if i.account_num == account:
-                                account_menu(input_profile, i)
+                account = input("Enter account number: ")
+                for i in accounts_list:
+                    if i.account_num == account:
+                        account_menu(input_profile, i)
             if user == 3:
                 close_account(input_profile)
             if user == 4:
                 edit_profile(input_profile)
             if user == 0:
-                main_menu()
+                return
 
 
 def search_by_profile_number(input_list, low, high, input_search):
@@ -629,6 +619,7 @@ def search_by_profile_number(input_list, low, high, input_search):
         mid = (high + low) // 2
         if input_list[mid].profile_num == input_search:
             profile_menu(input_list[mid])
+            return
         elif input_list[mid].profile_num > input_search:
             return search_by_profile_number(input_list, low, mid - 1, input_search)
         else:
@@ -651,7 +642,7 @@ def search_by_last_name(input_list):
     user_choice = input("Input profile number (-1 to cancel): ")
     try:
         if user_choice == '-1':
-            main_menu()
+            return
         if not re.search("^[\d]{8}$", user_choice):
             raise ValueError
     except ValueError:
@@ -660,6 +651,7 @@ def search_by_last_name(input_list):
         for i in profile_list:
             if i.profile_num == user_choice:
                 profile_menu(i)
+                break;
 
 
 def search_by_phone_number(input_list, low, high, input_search):
@@ -758,7 +750,7 @@ def display_profiles(input_list):
         i.display_details()
 
 
-def create_profile():
+def create_profile(input_list):
     print('Input "cancel" to cancel at any time')
     profile_num = profile_number_generator(profile_list)
     first_name = create_first_name()
@@ -780,7 +772,9 @@ def create_profile():
         return
     new_profile = Profile(profile_num, first_name, middle_name, last_name, date_of_birth, address, phone_num,
                           email_address)
-    return new_profile
+    print("Account created successfully!")
+    new_profile.display_details()
+    input_list.append(new_profile)
 
 
 def main_menu():
@@ -809,10 +803,7 @@ def main_menu():
         else:
             if user == 1:
                 print("Create Profile")
-                new_profile = create_profile()
-                print("Account created successfully!")
-                new_profile.display_details()
-                profile_list.append(new_profile)
+                create_profile(profile_list)
             elif user == 2:
                 print("Display Profiles")
                 display_profiles(profile_list)

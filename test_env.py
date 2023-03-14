@@ -63,7 +63,7 @@ class Profile:
 def load_profile_data():
     global profile_list
     try:
-        with open("profile_data.txt", "x+") as profile_data:
+        with open("profile_data.csv", "x+") as profile_data:
             file_content = profile_data.read()
             lines = file_content.splitlines()
             for line in lines:
@@ -82,7 +82,7 @@ def load_profile_data():
                 profile_list.append(new_profile)
     except FileExistsError:
         try:
-            with open("profile_data.txt", "r+") as profile_data:
+            with open("profile_data.csv", "r+") as profile_data:
                 file_content = profile_data.read()
                 lines = file_content.splitlines()
                 for line in lines:
@@ -108,7 +108,7 @@ def load_profile_data():
 def load_accounts_data():
     global accounts_list
     try:
-        with open("accounts_data_test.txt", "x+") as accounts_data:
+        with open("accounts_data.csv", "x+") as accounts_data:
             file_content = accounts_data.read()
             lines = file_content.splitlines()
             for line in lines:
@@ -122,7 +122,7 @@ def load_accounts_data():
                 accounts_list.append(new_account)
     except FileExistsError:
         try:
-            with open("accounts_data_test.txt", "r+") as accounts_data:
+            with open("accounts_data.csv", "r+") as accounts_data:
                 file_content = accounts_data.read()
                 lines = file_content.splitlines()
                 for line in lines:
@@ -146,7 +146,6 @@ load_accounts_data()
 
 
 def create_first_name():
-    print('Input "cancel" to cancel at any time')
     while True:
         first_name = input("Enter first name: ")
         try:
@@ -157,10 +156,7 @@ def create_first_name():
         except ValueError:
             print("Invalid first name, must be between 1 and 60 characters")
         else:
-            if first_name == "cancel":
-                main_menu()
-            else:
-                return first_name
+            return first_name
 
 
 def create_middle_name():
@@ -174,10 +170,7 @@ def create_middle_name():
         except ValueError:
             print("Invalid middle name, must be between 1 and 60 characters")
         else:
-            if middle_name == "cancel":
-                main_menu()
-            else:
-                return middle_name
+            return middle_name
 
 
 def create_last_name():
@@ -191,10 +184,7 @@ def create_last_name():
         except ValueError:
             print("Invalid first name, must be between 1 and 60 characters")
         else:
-            if last_name == "cancel":
-                main_menu()
-            else:
-                return last_name
+            return last_name
 
 
 def create_date_of_birth():
@@ -352,31 +342,25 @@ def create_address():
 def create_phone_number():
     while True:
         phone_num = input("Enter phone number (format ###-###-####): ")
-        if phone_num == 'cancel':
-            main_menu()
+        try:
+            if not re.search("^[\d]{3}-[\d]{3}-[\d]{4}$", phone_num):
+                raise ValueError
+        except ValueError:
+            print("Invalid phone number, must be in format ###-###-####")
         else:
-            try:
-                if not re.search("^[\d]{3}-[\d]{3}-[\d]{4}$", phone_num):
-                    raise ValueError
-            except ValueError:
-                print("Invalid phone number, must be in format ###-###-####")
-            else:
-                return phone_num
+            return phone_num
 
 
 def create_email_address():
     while True:
         email_address = input("Enter email address: ")
-        if email_address == 'cancel':
-            main_menu()
+        try:
+            if "@" not in email_address or "." not in email_address:
+                raise ValueError
+        except ValueError:
+            print("Invalid email address, please try again")
         else:
-            try:
-                if "@" not in email_address or "." not in email_address:
-                    raise ValueError
-            except ValueError:
-                print("Invalid email address, please try again")
-            else:
-                return email_address
+            return email_address
 
 
 def profile_number_generator(input_list):
@@ -526,9 +510,8 @@ def account_menu(profile, account):
                             if account1 == i.account_num:
                                 i.balance += funds
                         account_menu(profile, account)
-
             if user == 0:
-                profile_menu(profile)
+                return
 
 
 def edit_profile(input_profile):
@@ -584,7 +567,7 @@ def edit_profile(input_profile):
                 input_profile.email_address = new_email
                 profile_menu(input_profile)
             elif user == 0:
-                profile_menu(input_profile)
+                return
 
 
 def profile_menu(input_profile):
@@ -606,7 +589,7 @@ def profile_menu(input_profile):
         [2] Choose existing account
         [3] Close account
         [4] Edit profile
-        [0] Return to Main Menu
+        [0] Return to Search Menu
         """)
         user = input("Please select an option from above: ")
         try:
@@ -619,25 +602,16 @@ def profile_menu(input_profile):
             if user == 1:
                 create_account(input_profile)
             if user == 2:
-                while True:
-                    account = input("Enter account number: ")
-                    if account == 'cancel':
-                        return
-                    try:
-                        if not re.search("^[\d]{12}$", account):
-                            raise ValueError
-                    except ValueError:
-                        print("Invalid account number")
-                    else:
-                        for i in accounts_list:
-                            if i.account_num == account:
-                                account_menu(input_profile, i)
+                account = input("Enter account number: ")
+                for i in accounts_list:
+                    if i.account_num == account:
+                        account_menu(input_profile, i)
             if user == 3:
                 close_account(input_profile)
             if user == 4:
                 edit_profile(input_profile)
             if user == 0:
-                main_menu()
+                return
 
 
 def search_by_profile_number(input_list, low, high, input_search):
@@ -645,6 +619,7 @@ def search_by_profile_number(input_list, low, high, input_search):
         mid = (high + low) // 2
         if input_list[mid].profile_num == input_search:
             profile_menu(input_list[mid])
+            return
         elif input_list[mid].profile_num > input_search:
             return search_by_profile_number(input_list, low, mid - 1, input_search)
         else:
@@ -667,7 +642,7 @@ def search_by_last_name(input_list):
     user_choice = input("Input profile number (-1 to cancel): ")
     try:
         if user_choice == '-1':
-            main_menu()
+            return
         if not re.search("^[\d]{8}$", user_choice):
             raise ValueError
     except ValueError:
@@ -676,6 +651,7 @@ def search_by_last_name(input_list):
         for i in profile_list:
             if i.profile_num == user_choice:
                 profile_menu(i)
+                break;
 
 
 def search_by_phone_number(input_list, low, high, input_search):
@@ -706,11 +682,11 @@ def search_by_email(input_list, low, high, input_search):
 
 def save_data(input_list1, input_list2):
     print("Saving data.")
-    with open("profile_data.txt", "w") as profile_data:
+    with open("profile_data.csv", "w") as profile_data:
         for i in input_list1:
             profile_data.write(
                 f"{i.profile_num},{i.first_name},{i.middle_name},{i.last_name},{i.date_of_birth},{i.address},{i.phone_num},{i.email_address}\n")
-    with open("accounts_data_test.txt", "w") as accounts_data:
+    with open("accounts_data.csv", "w") as accounts_data:
         for j in input_list2:
             accounts_data.write(f"{j.profile_num},{j.account_num},{j.account_type},{j.balance},{j.timestamp}\n")
 
@@ -774,18 +750,31 @@ def display_profiles(input_list):
         i.display_details()
 
 
-def create_profile():
+def create_profile(input_list):
+    print('Input "cancel" to cancel at any time')
     profile_num = profile_number_generator(profile_list)
     first_name = create_first_name()
+    if first_name.lower() == "cancel":
+        return
     middle_name = create_middle_name()
+    if middle_name.lower() == "cancel":
+        return
     last_name = create_last_name()
+    if last_name.lower() == "cancel":
+        return
     date_of_birth = create_date_of_birth()
     address = create_address()
     phone_num = create_phone_number()
+    if phone_num.lower() == "cancel":
+        return
     email_address = create_email_address()
+    if email_address.lower() == "cancel":
+        return
     new_profile = Profile(profile_num, first_name, middle_name, last_name, date_of_birth, address, phone_num,
                           email_address)
-    return new_profile
+    print("Account created successfully!")
+    new_profile.display_details()
+    input_list.append(new_profile)
 
 
 def main_menu():
@@ -814,10 +803,7 @@ def main_menu():
         else:
             if user == 1:
                 print("Create Profile")
-                new_profile = create_profile()
-                print("Account created successfully!")
-                new_profile.display_details()
-                profile_list.append(new_profile)
+                create_profile(profile_list)
             elif user == 2:
                 print("Display Profiles")
                 display_profiles(profile_list)
