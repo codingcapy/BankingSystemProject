@@ -640,11 +640,17 @@ def profile_menu(input_profile):
                 main_menu()
 
 
-def search_by_profile_number(input_list):
-    user = input("Enter profile number: ")
-    for i in input_list:
-        if user == i.profile_num:
-            profile_menu(i)
+def search_by_profile_number(input_list, low, high, input_search):
+    if high >= low:
+        mid = (high + low) // 2
+        if input_list[mid].profile_num == input_search:
+            profile_menu(input_list[mid])
+        elif input_list[mid].profile_num > input_search:
+            return search_by_profile_number(input_list, low, mid - 1, input_search)
+        else:
+            return search_by_profile_number(input_list, mid + 1, high, input_search)
+    else:
+        return "Profile not found"
 
 
 def search_by_last_name(input_list):
@@ -672,18 +678,30 @@ def search_by_last_name(input_list):
                 profile_menu(i)
 
 
-def search_by_phone_number(input_list):
-    user = input("Enter phone number: ")
-    for i in input_list:
-        if user == i.phone_num:
-            profile_menu(i)
+def search_by_phone_number(input_list, low, high, input_search):
+    if high >= low:
+        mid = (high + low) // 2
+        if input_list[mid].phone_num == input_search:
+            profile_menu(input_list[mid])
+        elif input_list[mid].phone_num > input_search:
+            return search_by_phone_number(input_list, low, mid - 1, input_search)
+        else:
+            return search_by_phone_number(input_list, mid + 1, high, input_search)
+    else:
+        return "Profile not found"
 
 
-def search_by_email(input_list):
-    user = input("Enter email address: ")
-    for i in input_list:
-        if user == i.email_address:
-            profile_menu(i)
+def search_by_email(input_list, low, high, input_search):
+    if high >= low:
+        mid = (high + low) // 2
+        if input_list[mid].email_address == input_search:
+            profile_menu(input_list[mid])
+        elif input_list[mid].email_address > input_search:
+            return search_by_email(input_list, low, mid - 1, input_search)
+        else:
+            return search_by_email(input_list, mid + 1, high, input_search)
+    else:
+        return "Profile not found"
 
 
 def save_data(input_list1, input_list2):
@@ -722,16 +740,19 @@ def search_profile_menu():
         else:
             if user == 1:
                 print("By profile number")
-                search_by_profile_number(profile_list)
+                user = input("Enter profile number: ")
+                search_by_profile_number(profile_list, 0, len(profile_list) - 1, user)
             elif user == 2:
                 print("By last name")
                 search_by_last_name(profile_list)
             elif user == 3:
                 print("By phone number")
-                search_by_phone_number(profile_list)
+                user = input("Enter phone number: ")
+                search_by_phone_number(profile_list, 0, len(profile_list) - 1, user)
             elif user == 4:
                 print("By email address")
-                search_by_email(profile_list)
+                user = input("Enter email address: ")
+                search_by_email(profile_list, 0, len(profile_list) - 1, user)
             elif user == 0:
                 return
 
