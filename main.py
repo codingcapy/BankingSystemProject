@@ -63,7 +63,7 @@ class Profile:
 def load_profile_data():
     global profile_list
     try:
-        with open("profile_data.txt", "x+") as profile_data:
+        with open("profile_data.csv", "x+") as profile_data:
             file_content = profile_data.read()
             lines = file_content.splitlines()
             for line in lines:
@@ -82,7 +82,7 @@ def load_profile_data():
                 profile_list.append(new_profile)
     except FileExistsError:
         try:
-            with open("profile_data.txt", "r+") as profile_data:
+            with open("profile_data.csv", "r+") as profile_data:
                 file_content = profile_data.read()
                 lines = file_content.splitlines()
                 for line in lines:
@@ -108,7 +108,7 @@ def load_profile_data():
 def load_accounts_data():
     global accounts_list
     try:
-        with open("accounts_data_test.txt", "x+") as accounts_data:
+        with open("accounts_data.csv", "x+") as accounts_data:
             file_content = accounts_data.read()
             lines = file_content.splitlines()
             for line in lines:
@@ -122,7 +122,7 @@ def load_accounts_data():
                 accounts_list.append(new_account)
     except FileExistsError:
         try:
-            with open("accounts_data_test.txt", "r+") as accounts_data:
+            with open("accounts_data.csv", "r+") as accounts_data:
                 file_content = accounts_data.read()
                 lines = file_content.splitlines()
                 for line in lines:
@@ -690,11 +690,11 @@ def search_by_email(input_list, low, high, input_search):
 
 def save_data(input_list1, input_list2):
     print("Saving data.")
-    with open("profile_data.txt", "w") as profile_data:
+    with open("profile_data.csv", "w") as profile_data:
         for i in input_list1:
             profile_data.write(
                 f"{i.profile_num},{i.first_name},{i.middle_name},{i.last_name},{i.date_of_birth},{i.address},{i.phone_num},{i.email_address}\n")
-    with open("accounts_data_test.txt", "w") as accounts_data:
+    with open("accounts_data.csv", "w") as accounts_data:
         for j in input_list2:
             accounts_data.write(f"{j.profile_num},{j.account_num},{j.account_type},{j.balance},{j.timestamp}\n")
 
