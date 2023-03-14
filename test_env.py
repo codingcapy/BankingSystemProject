@@ -23,6 +23,14 @@ MIN_ADDRESS_NUM = 0
 MAX_ADDRESS_NUM = 999999
 MIN_SEARCH_MENU = 0
 MAX_SEARCH_MENU = 4
+MIN_ACCOUNT_MENU = 0
+MAX_ACCOUNT_MENU = 3
+MIN_EDIT_PROFILE_MENU = 0
+MAX_EDIT_PROFILE_MENU = 7
+MIN_CREATE_ACCOUNT_MENU = 0
+MAX_CREATE_ACCOUNT_MENU = 2
+MIN_PROFILE_MENU = 0
+MAX_PROFILE_MENU = 4
 
 profile_list = []
 accounts_list = []
@@ -154,7 +162,7 @@ def create_first_name():
             elif len(first_name) < MIN_NAME_LENGTH or len(first_name) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid first name, must be between 1 and 60 characters")
+            print(f"Invalid first name, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
             return first_name
 
@@ -168,7 +176,7 @@ def create_middle_name():
             elif len(middle_name) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid middle name, must be between 1 and 60 characters")
+            print(f"Invalid middle name, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
             return middle_name
 
@@ -182,104 +190,96 @@ def create_last_name():
             elif len(last_name) < MIN_NAME_LENGTH or len(last_name) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid first name, must be between 1 and 60 characters")
+            print(f"Invalid first name, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
             return last_name
 
 
-def create_date_of_birth():
+def create_birth_year():
     while True:
         birth_year = input("Enter birth year: ")
-        if birth_year == "cancel":
-            main_menu()
+        if birth_year.lower() == "cancel":
+            return "cancel"
         else:
             try:
                 birth_year = int(birth_year)
                 if birth_year not in range(MIN_BIRTH_YEAR, MAX_BIRTH_YEAR + 1):
                     raise ValueError
             except ValueError:
-                print("Invalid birth year, must be between 1900 and current year")
+                print(f"Invalid birth year, must be between {MIN_BIRTH_YEAR} and {MAX_BIRTH_YEAR}")
             else:
-                break
-    while True:
-        birth_month = input("Enter birth month (1-12): ")
-        if birth_month == "cancel":
-            main_menu()
-        else:
-            try:
-                birth_month = int(birth_month)
-                if birth_month not in range(MIN_BIRTH_MONTH, MAX_BIRTH_MONTH + 1):
-                    raise ValueError
-            except ValueError:
-                print("Invalid birth month, must be between 1 and 12")
-            else:
-                break
-    while True:
-        birth_day = input("Enter birth day (1-31): ")
-        if birth_day == "cancel":
-            main_menu()
-        else:
-            try:
-                birth_day = int(birth_day)
-                if int(birth_month) in [1, 3, 5, 7, 8, 10, 12]:
-                    if birth_day not in range(MIN_BIRTH_DAY, MAX_BIRTH_DAY1 + 1):
-                        raise ValueError
-                elif int(birth_month) in [4, 6, 9, 11]:
-                    if birth_day not in range(MIN_BIRTH_DAY, MAX_BIRTH_DAY2 + 1):
-                        raise ValueError
-                elif int(birth_month) == 2:
-                    if birth_day not in range(MIN_BIRTH_DAY, MAX_BIRTH_DAY_FEB + 1):
-                        raise ValueError
-            except ValueError:
-                print("Invalid birth day")
-            else:
-                date_of_birth = f"{birth_year}-{birth_month}-{birth_day}"
-                return date_of_birth
+                return birth_year
 
 
-def create_address():
+def create_birth_month():
     while True:
-        unit_number = input("Enter unit number if applicable (input space if not): ")
-        if unit_number == "cancel":
-            main_menu()
-        elif unit_number == ' ':
-            break
+        birth_month = input(f"Enter birth month ({MIN_BIRTH_MONTH}-{MAX_BIRTH_MONTH}): ")
+        if birth_month.lower() == "cancel":
+            return "cancel"
+        try:
+            birth_month = int(birth_month)
+            if birth_month not in range(MIN_BIRTH_MONTH, MAX_BIRTH_MONTH + 1):
+                raise ValueError
+        except ValueError:
+            print("Invalid birth month, must be between 1 and 12")
         else:
-            try:
-                unit_number = int(unit_number)
-                if unit_number not in range(MIN_ADDRESS_NUM, MAX_ADDRESS_NUM + 1):
-                    raise ValueError
-            except ValueError:
-                print("Invalid unit number, must be between 0 and 999999")
-            else:
-                break
+            return birth_month
+
+
+def create_birth_day(max_birth_day):
+    while True:
+        birth_day = input(f"Enter birth day ({MIN_BIRTH_DAY}-{max_birth_day}): ")
+        if birth_day.lower() == "cancel":
+            return "cancel"
+        try:
+            birth_day = int(birth_day)
+            if birth_day not in range(MIN_BIRTH_DAY, max_birth_day + 1):
+                raise ValueError
+        except ValueError:
+            print("Invalid birth day")
+        else:
+            return birth_day
+
+
+def create_unit_number():
+    while True:
+        unit_number = input("Enter unit number (input space if not applicable): ")
+        try:
+            if len(unit_number) < MIN_ADDRESS_NUM or len(unit_number) > MAX_ADDRESS_NUM + 1:
+                raise ValueError
+        except ValueError:
+            print(f"Invalid unit number, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
+        else:
+            return unit_number
+
+
+def create_street_number():
     while True:
         street_number = input("Enter street number: ")
-        if street_number == "cancel":
-            main_menu()
+        try:
+            if len(street_number) < MIN_ADDRESS_NUM or len(street_number) > MAX_ADDRESS_NUM + 1:
+                raise ValueError
+        except ValueError:
+            print(f"Invalid street number, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
-            try:
-                street_number = int(street_number)
-                if street_number not in range(MIN_ADDRESS_NUM, MAX_ADDRESS_NUM + 1):
-                    raise ValueError
-            except ValueError:
-                print("Invalid unit number, must be between 0 and 999999")
-            else:
-                break
+            return street_number
+
+
+def create_street_name():
     while True:
-        street_name = input("Enter street name: ")
+        street_name = input("Enter street name (including street type e.g. Ave, St, Blvd): ")
         try:
             if not re.search("^[A-Za-z-' ]+$", street_name):
                 raise ValueError
             elif len(street_name) < MIN_NAME_LENGTH or len(street_name) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid street name, must be between 1 and 60 characters")
+            print(f"Invalid street name, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
-            if street_name == "cancel":
-                main_menu()
-            else:
-                break
+            return street_name
+
+
+def create_city():
     while True:
         city = input("Enter city: ")
         try:
@@ -288,12 +288,12 @@ def create_address():
             elif len(city) < MIN_NAME_LENGTH or len(city) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid city, must be between 1 and 60 characters")
+            print(f"Invalid city, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
-            if city == "cancel":
-                main_menu()
-            else:
-                break
+            return city
+
+
+def create_province():
     while True:
         province = input("Enter province or state: ")
         try:
@@ -302,12 +302,12 @@ def create_address():
             elif len(province) < MIN_NAME_LENGTH or len(province) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid province, must be between 1 and 60 characters")
+            print(f"Invalid province, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
-            if province == "cancel":
-                main_menu()
-            else:
-                break
+            return province
+
+
+def create_postal_code():
     while True:
         postal_code = input("Enter postal code: ")
         try:
@@ -316,12 +316,12 @@ def create_address():
             elif len(postal_code) < MIN_NAME_LENGTH or len(postal_code) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid postal code, must be between 1 and 60 characters")
+            print(f"Invalid postal code, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
-            if postal_code == "cancel":
-                main_menu()
-            else:
-                break
+            return postal_code
+
+
+def create_country():
     while True:
         country = input("Enter country: ")
         try:
@@ -330,13 +330,9 @@ def create_address():
             elif len(country) < MIN_NAME_LENGTH or len(country) > MAX_NAME_LENGTH:
                 raise ValueError
         except ValueError:
-            print("Invalid province, must be between 1 and 60 characters")
+            print(f"Invalid province, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
         else:
-            if country == "cancel":
-                main_menu()
-            else:
-                address = f"{unit_number} {street_number} {street_name} {city} {province} {postal_code} {country}"
-                return address
+            return country
 
 
 def create_phone_number():
@@ -389,13 +385,11 @@ def create_account(input_profile):
         [1] Chequing
         [2] Saving
         [0] Cancel
-        =====================
-        Select account type
-        """)
-        user = input("Select account type (0-2): ")
+        =====================""")
+        user = input(f"Select account type ({MIN_CREATE_ACCOUNT_MENU}-{MAX_CREATE_ACCOUNT_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 3):
+            if user not in range(MIN_CREATE_ACCOUNT_MENU, MAX_CREATE_ACCOUNT_MENU + 1):
                 raise ValueError
         except ValueError:
             print("Invalid input")
@@ -408,7 +402,7 @@ def create_account(input_profile):
                 print("Account created successfully!")
                 new_account.display_details()
                 accounts_list.append(new_account)
-                profile_menu(input_profile)
+                return
             elif user == 2:
                 profile_num = input_profile.profile_num
                 account_num = account_number_generator(accounts_list)
@@ -417,7 +411,7 @@ def create_account(input_profile):
                 print("Account created successfully!")
                 new_account.display_details()
                 accounts_list.append(new_account)
-                profile_menu(input_profile)
+                return
             elif user == 0:
                 return
 
@@ -446,6 +440,8 @@ def account_menu(profile, account):
         print(f"""
         Banking System Prototype
         ====================
+        Account Menu
+        --------------------
         Profile # {profile.profile_num}
         Account # {account.account_num}
         Account Type : {account.account_type}
@@ -455,14 +451,16 @@ def account_menu(profile, account):
         [2] Withdrawal
         [3] Transfer Funds
         [0] Return to Profile Menu
+        ====================
+        Please select an option from above
         """)
-        user = input("Please select an option: ")
+        user = input(f"Please choose an option from the account menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 4):
+            if user not in range(MIN_ACCOUNT_MENU, MAX_ACCOUNT_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input, please select a valid option")
+            print(f"Invalid input, please select an option from the account menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU})")
         else:
             if user == 1:
                 deposit = input("Enter deposit amount: ")
@@ -474,7 +472,7 @@ def account_menu(profile, account):
                     print("Invalid amount")
                 else:
                     account.balance += deposit
-                    account_menu(profile, account)
+                    return
             if user == 2:
                 withdrawal = input("Enter withdrawal amount: ")
                 try:
@@ -485,7 +483,7 @@ def account_menu(profile, account):
                     print("Invalid amount")
                 else:
                     account.balance -= withdrawal
-                    account_menu(profile, account)
+                    return
             if user == 3:
                 while True:
                     funds = input("Enter amount to transfer: ")
@@ -509,7 +507,7 @@ def account_menu(profile, account):
                         for i in accounts_list:
                             if account1 == i.account_num:
                                 i.balance += funds
-                        account_menu(profile, account)
+                        return
             if user == 0:
                 return
 
@@ -529,43 +527,62 @@ def edit_profile(input_profile):
         [6] Edit Phone Number
         [7] Edit Email Address
         [0] Return to Profile
+        ====================
+        Please select an option from above
         """)
-        user = input("Please select an option from above: ")
+        user = input(f"Please select an option from the edit menu ({MIN_EDIT_PROFILE_MENU}-{MAX_EDIT_PROFILE_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 8):
+            if user not in range(MIN_EDIT_PROFILE_MENU, MAX_EDIT_PROFILE_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input")
+            print(f"Invalid input, please select an option from the edit menu ({MIN_EDIT_PROFILE_MENU}-{MAX_EDIT_PROFILE_MENU})")
         else:
             if user == 1:
                 new_first_name = create_first_name()
                 input_profile.first_name = new_first_name
-                profile_menu(input_profile)
+                return
             elif user == 2:
                 new_middle_name = create_middle_name()
                 input_profile.middle_name = new_middle_name
-                profile_menu(input_profile)
+                return
             elif user == 3:
                 new_last_name = create_last_name()
                 input_profile.last_name = new_last_name
-                profile_menu(input_profile)
+                return
             elif user == 4:
-                new_date_of_birth = create_date_of_birth()
+                new_birth_year = create_birth_year()
+                new_birth_month = create_birth_month()
+                if new_birth_month in [1, 3, 5, 7, 8, 10, 12]:
+                    max_birth_day = 31
+                elif new_birth_month in [4, 6, 9, 11]:
+                    max_birth_day = 30
+                elif new_birth_month == 2:
+                    max_birth_day = 28
+                new_birth_day = create_birth_day(max_birth_day)
+                new_date_of_birth = f"{new_birth_year}-{new_birth_month}-{new_birth_day}"
                 input_profile.date_of_birth = new_date_of_birth
-                profile_menu(input_profile)
+                return
             elif user == 5:
-                new_address = create_address()
+                new_unit_number = create_unit_number()
+                new_street_number = create_street_number()
+                new_street_name = create_street_name()
+                new_city = create_city()
+                new_province = create_province()
+                new_postal_code = create_postal_code()
+                new_city = create_city()
+                new_country = create_country()
+                new_address = f"{new_unit_number} {new_street_number} {new_street_name} {new_city} {new_province} {new_postal_code} {new_country}"
                 input_profile.address = new_address
-                profile_menu(input_profile)
+                return
             elif user == 6:
                 new_phone_number = create_phone_number()
                 input_profile.phone_num = new_phone_number
-                profile_menu(input_profile)
+                return
             elif user == 7:
                 new_email = create_email_address()
                 input_profile.email_address = new_email
-                profile_menu(input_profile)
+                return
             elif user == 0:
                 return
 
@@ -584,20 +601,22 @@ def profile_menu(input_profile):
         Accounts:""")
         display_accounts(accounts_list, input_profile)
         print(f"""
-        ====================
+        --------------------
         [1] Open new account
         [2] Choose existing account
         [3] Close account
         [4] Edit profile
         [0] Return to Search Menu
+        ====================
+        Please select an option from above
         """)
-        user = input("Please select an option from above: ")
+        user = input(f"Please select an option from the profile menu ({MIN_PROFILE_MENU}-{MAX_PROFILE_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 5):
+            if user not in range(MIN_PROFILE_MENU, MAX_PROFILE_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input")
+            print(f"Invalid input, please select an option from the profile menu ({MIN_PROFILE_MENU}-{MAX_PROFILE_MENU})")
         else:
             if user == 1:
                 create_account(input_profile)
@@ -706,13 +725,13 @@ def search_profile_menu():
         ====================
         Please select an option from above
         """)
-        user = input("Please choose an option from the search menu (0-4): ")
+        user = input(f"Please choose an option from the search menu ({MIN_SEARCH_MENU}-{MAX_SEARCH_MENU}): ")
         try:
             user = int(user)
             if user not in range(MIN_SEARCH_MENU, MAX_SEARCH_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input, please select an option from the search menu (0-4)")
+            print(f"Invalid input, please select an option from the search menu ({MIN_SEARCH_MENU}-{MAX_SEARCH_MENU})")
         else:
             if user == 1:
                 print("By profile number")
@@ -762,8 +781,44 @@ def create_profile(input_list):
     last_name = create_last_name()
     if last_name.lower() == "cancel":
         return
-    date_of_birth = create_date_of_birth()
-    address = create_address()
+    birth_year = create_birth_year()
+    if birth_year == "cancel":
+        return
+    birth_month = create_birth_month()
+    if birth_month == "cancel":
+        return
+    if birth_month in [1, 3, 5, 7, 8, 10, 12]:
+        max_birth_day = MAX_BIRTH_DAY1
+    elif birth_month in [4, 6, 9, 11]:
+        max_birth_day = MAX_BIRTH_DAY2
+    elif birth_month == 2:
+        max_birth_day = MAX_BIRTH_DAY_FEB
+    birth_day = create_birth_day(max_birth_day)
+    if birth_day == "cancel":
+        return
+    date_of_birth = f"{birth_year}-{birth_month}-{birth_day}"
+    unit_number = create_unit_number()
+    if unit_number.lower() == "cancel":
+        return
+    street_number = create_street_number()
+    if street_number.lower() == "cancel":
+        return
+    street_name = create_street_name()
+    if street_name.lower() == "cancel":
+        return
+    city = create_city()
+    if city.lower() == "cancel":
+        return
+    province = create_province()
+    if province.lower() == "cancel":
+        return
+    postal_code = create_postal_code()
+    if postal_code.lower() == "cancel":
+        return
+    country = create_country()
+    if country.lower() == "cancel":
+        return
+    address = f"{unit_number} {street_number} {street_name} {city} {province} {postal_code} {country}"
     phone_num = create_phone_number()
     if phone_num.lower() == "cancel":
         return
@@ -793,13 +848,13 @@ def main_menu():
         ====================
         Please select an option from above
         """)
-        user = input("Please choose an option from the main menu (0-4): ")
+        user = input(f"Please choose an option from the main menu ({MIN_MAIN_MENU}-{MAX_MAIN_MENU}): ")
         try:
             user = int(user)
             if user not in range(MIN_MAIN_MENU, MAX_MAIN_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input, please select an option from the main menu")
+            print(f"Invalid input, please select an option from the main menu ({MIN_MAIN_MENU}-{MAX_MAIN_MENU})")
         else:
             if user == 1:
                 print("Create Profile")

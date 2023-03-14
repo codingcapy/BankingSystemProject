@@ -23,6 +23,14 @@ MIN_ADDRESS_NUM = 0
 MAX_ADDRESS_NUM = 999999
 MIN_SEARCH_MENU = 0
 MAX_SEARCH_MENU = 4
+MIN_ACCOUNT_MENU = 0
+MAX_ACCOUNT_MENU = 3
+MIN_EDIT_PROFILE_MENU = 0
+MAX_EDIT_PROFILE_MENU = 7
+MIN_CREATE_ACCOUNT_MENU = 0
+MAX_CREATE_ACCOUNT_MENU = 2
+MIN_PROFILE_MENU = 0
+MAX_PROFILE_MENU = 4
 
 profile_list = []
 accounts_list = []
@@ -377,13 +385,11 @@ def create_account(input_profile):
         [1] Chequing
         [2] Saving
         [0] Cancel
-        =====================
-        Select account type
-        """)
-        user = input("Select account type (0-2): ")
+        =====================""")
+        user = input(f"Select account type ({MIN_CREATE_ACCOUNT_MENU}-{MAX_CREATE_ACCOUNT_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 3):
+            if user not in range(MIN_CREATE_ACCOUNT_MENU, MAX_CREATE_ACCOUNT_MENU + 1):
                 raise ValueError
         except ValueError:
             print("Invalid input")
@@ -434,6 +440,8 @@ def account_menu(profile, account):
         print(f"""
         Banking System Prototype
         ====================
+        Account Menu
+        --------------------
         Profile # {profile.profile_num}
         Account # {account.account_num}
         Account Type : {account.account_type}
@@ -443,14 +451,16 @@ def account_menu(profile, account):
         [2] Withdrawal
         [3] Transfer Funds
         [0] Return to Profile Menu
+        ====================
+        Please select an option from above
         """)
-        user = input("Please select an option: ")
+        user = input(f"Please choose an option from the account menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 4):
+            if user not in range(MIN_ACCOUNT_MENU, MAX_ACCOUNT_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input, please select a valid option")
+            print(f"Invalid input, please select an option from the account menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU})")
         else:
             if user == 1:
                 deposit = input("Enter deposit amount: ")
@@ -517,14 +527,16 @@ def edit_profile(input_profile):
         [6] Edit Phone Number
         [7] Edit Email Address
         [0] Return to Profile
+        ====================
+        Please select an option from above
         """)
-        user = input("Please select an option from above: ")
+        user = input(f"Please select an option from the edit menu ({MIN_EDIT_PROFILE_MENU}-{MAX_EDIT_PROFILE_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 8):
+            if user not in range(MIN_EDIT_PROFILE_MENU, MAX_EDIT_PROFILE_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input")
+            print(f"Invalid input, please select an option from the edit menu ({MIN_EDIT_PROFILE_MENU}-{MAX_EDIT_PROFILE_MENU})")
         else:
             if user == 1:
                 new_first_name = create_first_name()
@@ -589,20 +601,22 @@ def profile_menu(input_profile):
         Accounts:""")
         display_accounts(accounts_list, input_profile)
         print(f"""
-        ====================
+        --------------------
         [1] Open new account
         [2] Choose existing account
         [3] Close account
         [4] Edit profile
         [0] Return to Search Menu
+        ====================
+        Please select an option from above
         """)
-        user = input("Please select an option from above: ")
+        user = input(f"Please select an option from the profile menu ({MIN_PROFILE_MENU}-{MAX_PROFILE_MENU}): ")
         try:
             user = int(user)
-            if user not in range(0, 5):
+            if user not in range(MIN_PROFILE_MENU, MAX_PROFILE_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input")
+            print(f"Invalid input, please select an option from the profile menu ({MIN_PROFILE_MENU}-{MAX_PROFILE_MENU})")
         else:
             if user == 1:
                 create_account(input_profile)
@@ -711,13 +725,13 @@ def search_profile_menu():
         ====================
         Please select an option from above
         """)
-        user = input("Please choose an option from the search menu (0-4): ")
+        user = input(f"Please choose an option from the search menu ({MIN_SEARCH_MENU}-{MAX_SEARCH_MENU}): ")
         try:
             user = int(user)
             if user not in range(MIN_SEARCH_MENU, MAX_SEARCH_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input, please select an option from the search menu (0-4)")
+            print(f"Invalid input, please select an option from the search menu ({MIN_SEARCH_MENU}-{MAX_SEARCH_MENU})")
         else:
             if user == 1:
                 print("By profile number")
@@ -834,13 +848,13 @@ def main_menu():
         ====================
         Please select an option from above
         """)
-        user = input("Please choose an option from the main menu (0-4): ")
+        user = input(f"Please choose an option from the main menu ({MIN_MAIN_MENU}-{MAX_MAIN_MENU}): ")
         try:
             user = int(user)
             if user not in range(MIN_MAIN_MENU, MAX_MAIN_MENU + 1):
                 raise ValueError
         except ValueError:
-            print("Invalid input, please select an option from the main menu")
+            print(f"Invalid input, please select an option from the main menu ({MIN_MAIN_MENU}-{MAX_MAIN_MENU})")
         else:
             if user == 1:
                 print("Create Profile")
