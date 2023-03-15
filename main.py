@@ -636,6 +636,7 @@ def profile_menu(input_profile):
 
 
 def search_by_profile_number(input_list, low, high, input_search):
+    input_list.sort(key=lambda x: x.profile_num)
     if high >= low:
         mid = (high + low) // 2
         if input_list[mid].profile_num == input_search:
