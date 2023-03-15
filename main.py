@@ -9,6 +9,16 @@ import re
 
 MIN_MAIN_MENU = 0
 MAX_MAIN_MENU = 5
+MIN_SEARCH_MENU = 0
+MAX_SEARCH_MENU = 4
+MIN_PROFILE_MENU = 0
+MAX_PROFILE_MENU = 4
+MIN_EDIT_PROFILE_MENU = 0
+MAX_EDIT_PROFILE_MENU = 7
+MIN_ACCOUNT_MENU = 0
+MAX_ACCOUNT_MENU = 3
+MIN_CREATE_ACCOUNT_MENU = 0
+MAX_CREATE_ACCOUNT_MENU = 2
 MIN_NAME_LENGTH = 1
 MAX_NAME_LENGTH = 60
 MIN_BIRTH_YEAR = 1900
@@ -19,21 +29,10 @@ MIN_BIRTH_DAY = 1
 MAX_BIRTH_DAY1 = 31
 MAX_BIRTH_DAY2 = 30
 MAX_BIRTH_DAY_FEB = 28
-MIN_ADDRESS_NUM = 0
-MAX_ADDRESS_NUM = 999999
-MIN_SEARCH_MENU = 0
-MAX_SEARCH_MENU = 4
-MIN_ACCOUNT_MENU = 0
-MAX_ACCOUNT_MENU = 3
-MIN_EDIT_PROFILE_MENU = 0
-MAX_EDIT_PROFILE_MENU = 7
-MIN_CREATE_ACCOUNT_MENU = 0
-MAX_CREATE_ACCOUNT_MENU = 2
-MIN_PROFILE_MENU = 0
-MAX_PROFILE_MENU = 4
 
 profile_list = []
 accounts_list = []
+profile_archive = []
 
 
 class Account:
@@ -245,7 +244,7 @@ def create_unit_number():
     while True:
         unit_number = input("Enter unit number (input space if not applicable): ")
         try:
-            if len(unit_number) < MIN_ADDRESS_NUM or len(unit_number) > MAX_ADDRESS_NUM + 1:
+            if len(unit_number) < MIN_NAME_LENGTH or len(unit_number) > MAX_NAME_LENGTH + 1:
                 raise ValueError
         except ValueError:
             print(f"Invalid unit number, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
@@ -257,7 +256,7 @@ def create_street_number():
     while True:
         street_number = input("Enter street number: ")
         try:
-            if len(street_number) < MIN_ADDRESS_NUM or len(street_number) > MAX_ADDRESS_NUM + 1:
+            if len(street_number) < MIN_NAME_LENGTH or len(street_number) > MAX_NAME_LENGTH + 1:
                 raise ValueError
         except ValueError:
             print(f"Invalid street number, must be between {MIN_NAME_LENGTH} and {MAX_NAME_LENGTH} characters")
@@ -460,7 +459,8 @@ def account_menu(profile, account):
             if user not in range(MIN_ACCOUNT_MENU, MAX_ACCOUNT_MENU + 1):
                 raise ValueError
         except ValueError:
-            print(f"Invalid input, please select an option from the account menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU})")
+            print(
+                f"Invalid input, please select an option from the account menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU})")
         else:
             if user == 1:
                 deposit = input("Enter deposit amount: ")
@@ -536,7 +536,8 @@ def edit_profile(input_profile):
             if user not in range(MIN_EDIT_PROFILE_MENU, MAX_EDIT_PROFILE_MENU + 1):
                 raise ValueError
         except ValueError:
-            print(f"Invalid input, please select an option from the edit menu ({MIN_EDIT_PROFILE_MENU}-{MAX_EDIT_PROFILE_MENU})")
+            print(
+                f"Invalid input, please select an option from the edit menu ({MIN_EDIT_PROFILE_MENU}-{MAX_EDIT_PROFILE_MENU})")
         else:
             if user == 1:
                 new_first_name = create_first_name()
@@ -616,7 +617,8 @@ def profile_menu(input_profile):
             if user not in range(MIN_PROFILE_MENU, MAX_PROFILE_MENU + 1):
                 raise ValueError
         except ValueError:
-            print(f"Invalid input, please select an option from the profile menu ({MIN_PROFILE_MENU}-{MAX_PROFILE_MENU})")
+            print(
+                f"Invalid input, please select an option from the profile menu ({MIN_PROFILE_MENU}-{MAX_PROFILE_MENU})")
         else:
             if user == 1:
                 create_account(input_profile)
@@ -670,33 +672,37 @@ def search_by_last_name(input_list):
         for i in profile_list:
             if i.profile_num == user_choice:
                 profile_menu(i)
-                break;
+                break
 
 
 def search_by_phone_number(input_list, low, high, input_search):
+    input_list.sort(key=lambda x: x.phone_num)
     if high >= low:
         mid = (high + low) // 2
         if input_list[mid].phone_num == input_search:
             profile_menu(input_list[mid])
+            return
         elif input_list[mid].phone_num > input_search:
             return search_by_phone_number(input_list, low, mid - 1, input_search)
         else:
             return search_by_phone_number(input_list, mid + 1, high, input_search)
     else:
-        return "Profile not found"
+        print("Profile not found")
 
 
 def search_by_email(input_list, low, high, input_search):
+    input_list.sort(key=lambda x: x.email_address)
     if high >= low:
         mid = (high + low) // 2
         if input_list[mid].email_address == input_search:
             profile_menu(input_list[mid])
+            return
         elif input_list[mid].email_address > input_search:
             return search_by_email(input_list, low, mid - 1, input_search)
         else:
             return search_by_email(input_list, mid + 1, high, input_search)
     else:
-        return "Profile not found"
+        print("Profile not found")
 
 
 def save_data(input_list1, input_list2):
@@ -756,11 +762,12 @@ def delete_profile(input_list, input_list2):
     user_del = input("Enter profile number: ")
     for i in input_list:
         if user_del == i.profile_num:
+            profile_archive.append(i)
             input_list.remove(i)
             print(f"Profile {user_del} has been deleted.")
     for j in input_list2:
         if user_del == j.profile_num:
-            input_list.remove(j)
+            input_list2.remove(j)
             print(f"All accounts associated with Profile {user_del} have been deleted.")
 
 
@@ -827,9 +834,10 @@ def create_profile(input_list):
         return
     new_profile = Profile(profile_num, first_name, middle_name, last_name, date_of_birth, address, phone_num,
                           email_address)
-    print("Account created successfully!")
+    print("Profile created successfully!")
     new_profile.display_details()
     input_list.append(new_profile)
+    input_list.sort(key=lambda x: x.profile_num)
 
 
 def main_menu():
