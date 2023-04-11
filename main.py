@@ -32,8 +32,10 @@ MIN_PROFILE_MENU_INACTIVE = 0
 MAX_PROFILE_MENU_INACTIVE = 1
 MIN_EDIT_MENU = 0
 MAX_EDIT_MENU = 7
-MIN_ACCOUNT_MENU = 0
-MAX_ACCOUNT_MENU = 3
+MIN_ACCOUNT_MENU_ACTIVE = 0
+MAX_ACCOUNT_MENU_ACTIVE = 3
+MIN_ACCOUNT_MENU_INACTIVE = 0
+MAX_ACCOUNT_MENU_INACTIVE = 1
 MIN_CREATE_ACCT_MENU = 0
 MAX_CREATE_ACCT_MENU = 2
 
@@ -560,39 +562,70 @@ def transfer_search(account, input_list, low, high, transfer_amt, transfer_acct)
 
 
 def account_menu(account):
-    while True:
-        print(f"""
-        Banking System Prototype
-        ====================
-        Account Menu
-        --------------------
-        Profile Number: {account.profile_number}
-        Account Number: {account.account_number}
-        Account Type: {account.account_type}
-        Interest Rate: {account.interest_rate}
-        Balance: ${account.balance}
-        --------------------
-        [1] Deposit
-        [2] Withdraw
-        [3] Transfer
-        [0] Return to Profile Menu
-        ====================""")
-        user = input(f"Please select an option from the menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU}): ")
-        try:
-            user = int(user)
-            if user not in range(MIN_ACCOUNT_MENU, MAX_ACCOUNT_MENU + 1):
-                raise ValueError
-        except ValueError:
-            print(f"Invalid input, please select an option from the menu ({MIN_ACCOUNT_MENU}-{MAX_ACCOUNT_MENU})")
-        else:
-            if user == 1:
-                deposit(account)
-            elif user == 2:
-                withdraw(account)
-            elif user == 3:
-                transfer(account)
-            if user == 0:
-                return
+    if account.status == "ACTIVE":
+        while True:
+            print(f"""
+            Banking System Prototype
+            ====================
+            Account Menu
+            --------------------
+            Profile Number: {account.profile_number}
+            Account Number: {account.account_number}
+            Account Type: {account.account_type}
+            Interest Rate: {account.interest_rate}
+            Balance: ${account.balance}
+            --------------------
+            [1] Deposit
+            [2] Withdraw
+            [3] Transfer
+            [0] Return to Profile Menu
+            ====================""")
+            user = input(f"Please select an option from the menu ({MIN_ACCOUNT_MENU_ACTIVE}-{MAX_ACCOUNT_MENU_ACTIVE}): ")
+            try:
+                user = int(user)
+                if user not in range(MIN_ACCOUNT_MENU_ACTIVE, MAX_ACCOUNT_MENU_ACTIVE + 1):
+                    raise ValueError
+            except ValueError:
+                print(f"Invalid input, please select an option from the menu ({MIN_ACCOUNT_MENU_ACTIVE}-{MAX_ACCOUNT_MENU_ACTIVE})")
+            else:
+                if user == 1:
+                    deposit(account)
+                elif user == 2:
+                    withdraw(account)
+                elif user == 3:
+                    transfer(account)
+                if user == 0:
+                    return
+    else:
+        while True:
+            print(f"""
+            Banking System Prototype
+            ====================
+            Account Menu
+            --------------------
+            Profile Number: {account.profile_number}
+            Account Number: {account.account_number}
+            Account Type: {account.account_type}
+            Interest Rate: {account.interest_rate}
+            Balance: ${account.balance}
+            --------------------
+            [1] Reactivate account
+            [0] Return to Profile Menu
+            ====================""")
+            user = input(f"Please select an option from the menu ({MIN_ACCOUNT_MENU_INACTIVE}-{MAX_ACCOUNT_MENU_INACTIVE}): ")
+            try:
+                user = int(user)
+                if user not in range(MIN_ACCOUNT_MENU_INACTIVE, MAX_ACCOUNT_MENU_INACTIVE + 1):
+                    raise ValueError
+            except ValueError:
+                print(f"Invalid input, please select an option from the menu ({MIN_ACCOUNT_MENU_INACTIVE}-{MAX_ACCOUNT_MENU_INACTIVE})")
+            else:
+                if user == 1:
+                    account.status = "ACTIVE"
+                    print("Account reactivated")
+                    return
+                if user == 0:
+                    return
 
 
 def select_account(input_list, low, high, input_search, profile):
