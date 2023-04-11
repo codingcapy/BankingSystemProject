@@ -763,7 +763,8 @@ def profile_menu(profile):
             Status: {profile.status}
             --------------------""")
             for i in accounts_list:
-                i.display_details()
+                if i.profile_number == profile.profile_number:
+                    i.display_details()
             print(f"""
             --------------------
             [1] Create Account
